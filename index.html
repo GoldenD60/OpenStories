@@ -11,6 +11,8 @@
 		<button onclick="alert('Hello World!');">Alert</button>
 		<button onclick="confirm('Are you ready?');">Confirm</button>
 		<button onclick="prompt(`What's your name?`);">Prompt</button>
+		<button onclick="toast('Hi there!', 'Dissmiss');">Toast</button>
+		<button onclick="toast2('Supercalifragilisticexpialidocous', 'No way');">Toast (top)</button>
 	</body>
 </html>
 
@@ -371,7 +373,7 @@ function toast(text, actionText) {
 }
 
 function toast2(text, actionText) {
-	// Usage: toast2('Hi there!', 'Dissmiss')
+	// Usage: toast2('Supercalifragilisticexpialidocous', 'No way')
 	var toast = document.createElement('div');
 	document.body.appendChild(toast);
 	document.body.style.overflow = "hidden";
