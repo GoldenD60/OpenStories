@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Open Stories</title>
+	</head>
+	<body>
+		<!--<header>OpenStories</header><br><br>
+		<h1>Text Input</h1>
+		<input>-->
+		<button onclick="alert('Hello World!');">Alert</button>
+	</body>
+</html>
+
+<style type="text/css">
+	* {
+		font-family: -apple-system, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
+		user-select: none;
+		pointer-events: auto;
+	}
+
+	h1, h2, h3, h4, h5, h6 {
+		margin: 0; list-style: none; text-align: left; display: block; box-sizing: border-box; padding: 0 0 0 15px; font-size: 12px; font-weight: 500; color: #1f1f21; min-height: 24px; line-height: 25px; text-transform: uppercase; position: relative; background-color: #eee; background-size: 100% 1px; background-repeat: no-repeat; background-position: top; background-image: linear-gradient(0deg, #ccc, #ccc 100%);
+	}
+
+	ul, li {
+		width: 100%;
+		display: -webkit-box;
+		display: -webkit-flex;
+		display: flex;
+		-webkit-box-orient: horizontal;
+		-webkit-box-direction: normal;
+		-webkit-flex-direction: row;
+		flex-direction: row;
+		-webkit-box-pack: start;
+		-webkit-justify-content: flex-start;
+		justify-content: flex-start;
+		-webkit-box-align: center;
+		-webkit-align-items: center;
+		align-items: center;
+	}
+
+	@keyframes dialogMaskIn {
+		0% {
+			background-color: transparent;
+		}
+	}
+
+	@keyframes dialogIn {
+		0% {
+			background-color: transparent;
+			transform: scale(1.25) translate(-40%, -40%);
+		}
+	}
+
+	@keyframes dialogMaskOut {
+		100% {
+			background-color: transparent;
+		}
+	}
+
+	@keyframes dialogOut {
+		100% {
+			opacity: 0;
+		}
+	}
+
+	@keyframes toastIn {
+		0% {
+			margin: -54px 0;
+			opacity: 0;
+		}
+	}
+
+	@keyframes toastOut {
+		100% {
+			margin: -54px 0;
+			opacity: 0;
+		}
+	}
+
+	@keyframes sheetUp {
+		0% {
+			bottom: -50%;
+		}
+	}
+
+	@keyframes sheetDown {
+		100% {
+			bottom: -50%;
+		}
+	}
+</style>
+
+<script type="text/javascript">
+window.onload = init();
+
+function init() {
+	document.body.style.backgroundColor = "#efeff4";
+
+	var headers = document.getElementsByTagName('header');
+	for (var i = 0; i < headers.length; i++) {
+		headers[i].setAttribute("style", "top: 0; position: absolute; left: 0; right: 0; z-index: 10000; box-sizing: border-box; padding-top: 0; overflow: hidden; word-spacing: 0; padding: 0; margin: 0; font: inherit; border: 0; line-height: 45px; cursor: default; user-select: none; display: flex; -webkit-box-align: stretch; align-items: stretch; flex-wrap: nowrap; height: 44px; padding-left: 0; padding-right: 0; background: #fafafa; color: #1f1f21; box-shadow: none; font-weight: 400; width: 100%; white-space: nowrap; border-bottom: none; background-size: 100% 1px; background-repeat: no-repeat; background-position: bottom; background-image: linear-gradient(0deg,#b2b2b2,#b2b2b2 100%); padding-bottom: 46px;");
+		headers[i].innerHTML = "<div></div><div> "+headers[i].textContent+" </div><div></div>"
+		headers[i].childNodes[0].setAttribute("style", "box-sizing: border-box; padding: 0; margin: 0; font: inherit; color: inherit; background: transparent; border: none; line-height: normal; max-width: 50%; width: 27%; line-height: 44px;");
+		headers[i].childNodes[1].setAttribute("style", "font-size: 17px; font-weight: 500; color: #1f1f21; overflow: visible; padding: 0; margin: 0; box-sizing: border-box; font: inherit; background: transparent; border: none; width: 46%; text-align: center;");
+		headers[i].childNodes[2].setAttribute("style", "box-sizing: border-box; padding: 0; margin: 0; font: inherit; color: inherit; background: transparent; border: none; line-height: normal; max-width: 50%; width: 27%; text-align: right;");
+		var actionButton2 = document.createElement('button');
+		headers[i].childNodes[2].appendChild(actionButton2)
+			.setAttribute("style", "background-color: transparent; transition: none; font: inherit; -webkit-font-smoothing: antialiased; padding: 4px 10px; letter-spacing: 0; color: #0076ff; border-radius: 2px; border: 1px solid transparent; font-weight: 400; font-size: 17px; text-align: right; line-height: 49px;");
+		actionButton2.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#0076ff"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>';
+
+		var selected = false;
+
+		actionButton2.addEventListener('touchstart', () => {
+			actionButton2.childNodes[0].setAttribute("fill", "#c8e0fb");
+		});
+
+		actionButton2.addEventListener('touchend', () => {
+			actionButton2.childNodes[0].setAttribute("fill", "#0076ff");
+			selected = !selected;
+			actionButton2.setAttribute("selected", selected);
+		});
+
+		actionButton2.addEventListener('mousedown', () => {
+			actionButton2.childNodes[0].setAttribute("fill", "#c8e0fb");
+		});
+
+		actionButton2.addEventListener('mouseup', () => {
+			actionButton2.childNodes[0].setAttribute("fill", "#0076ff");
+			selected = !selected;
+			actionButton2.setAttribute("selected", selected);
+		});
+	}
+
+	var inputs = document.getElementsByTagName('input')
+	for (var i = 0; i < inputs.length; i++) {
+		inputs[i].outerHTML = '<label><input placeholder="Name"></label>';
+		var label = inputs[i].parentNode;
+		label.setAttribute("style", "padding: 12px 6px 12px 0; line-height: 1.2em; min-height: 44px; box-sizing: border-box; display: flex; -webkit-box-flex: 1; flex-grow: 1; flex-wrap: wrap; -webkit-box-orient: horizontal; -webkit-box-direction: normal; flex-direction: row; -webkit-box-ordinal-group: 2; order: 1; margin-right: auto; -webkit-box-align: center; align-items: center; align-self: stretch; margin-left: 0; border-bottom: none; background-size: 100% 1px; background-repeat: no-repeat; background-position: bottom; background-image: linear-gradient(0deg, #ccc, #ccc 100%);");
+		inputs[i].setAttribute("style", "display: inline-block; position: relative; line-height: 1.2em; -webkit-box-direction: normal; color: #1f1f21;");
+	}
+}
+
+function alert(text) {
+	// Usage: alert("Hello, world!")
+	var dialogMask = document.createElement('div');
+	document.body.appendChild(dialogMask);
+	dialogMask.setAttribute("style", "position: absolute; background-color: rgba(0, 0, 0, 0.2); top: 0px; left: 0px; width: 100vw; height: 100vh; z-index: 2000; animation: ease dialogMaskIn .25s;");
+
+	var dialog = document.createElement('div');
+	dialogMask.appendChild(dialog);
+	dialog.setAttribute("style", "background-color: #f4f4f4; position: absolute; top: 50%; left: 50%; width: 270px; max-width: 95%; height: 116px; border-radius: 8px; transform: translate(-50%,-50%); z-index: 2001; animation: ease dialogIn .25s;");
+
+	var dialogHeader = document.createElement('div');
+	dialog.appendChild(dialogHeader);
+	dialogHeader.textContent = " Alert ";
+	dialogHeader.setAttribute("style", "user-select: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-size: 17px; font-weight: 500; padding: 16px 8px 0; text-align: center; color: #1f1f21; line-height: normal; -webkit-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;");
+
+	var dialogContent = document.createElement('div');
+	dialog.appendChild(dialogContent);
+	dialogContent.textContent = " "+ text +" "
+	dialogContent.setAttribute("style", "user-select: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; box-sizing: border-box; background-clip: padding-box; padding: 4px 12px 8px; font-size: 14px; min-height: 36px; text-align: center; color: #1f1f21; -webkit-text-size-adjust: 100%;");
+
+	var dialogButton = document.createElement('div');
+	dialog.appendChild(dialogButton);
+	dialogButton.innerHTML = '<button> OK </button>';
+	dialogButton.setAttribute("style", "line-height: normal; white-space: nowrap; display: flex; flex-wrap: wrap; width: 100%; -webkit-text-size-adjust: 100%;");
+	dialogButton.childNodes[0].setAttribute("style", "position: relative; -webkit-box-flex: 1; flex: 1; display: block; width: 100%; box-sizing: border-box; background: transparent; -webkit-font-smoothing: antialiased; user-select: none; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; letter-spacing: 0; vertical-align: middle; border: none; border-top: 1px solid #ddd; font-size: 16px; padding: 0 8px; margin: 0; background-color: transparent; text-align: center; height: 44px; line-height: 44px; outline: none; color: #0076ff; -webkit-text-size-adjust: 100%; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;");
+	dialogButton.childNodes[0].addEventListener("touchstart", () => {
+		dialogButton.childNodes[0].style.backgroundColor = "#e8e8e8";
+	});
+	dialogButton.childNodes[0].addEventListener("touchend", () => {
+		dialogButton.childNodes[0].style.backgroundColor = "#f4f4f4";
+		dialogMask.style.animation = "ease dialogMaskOut .25s";
+		dialog.style.animation = "ease dialogOut .25s";
+		setTimeout(() => {
+			dialogMask.remove();
+		}, 235);
+	});
+	dialogButton.childNodes[0].addEventListener("mouseup", () => {
+		dialogButton.childNodes[0].style.backgroundColor = "#e8e8e8";
+	});
+	dialogButton.childNodes[0].addEventListener("mousedown", () => {
+		dialogButton.childNodes[0].style.backgroundColor = "#f4f4f4";
+		dialogMask.style.animation = "ease dialogMaskOut .25s";
+		dialog.style.animation = "ease dialogOut .25s";
+		setTimeout(() => {
+			dialogMask.remove();
+		}, 235);
+	});
+}
+
+function confirm(text) {
+	// Usage: confirm("Are you ready?")
+	var dialogMask = document.createElement('div');
+	document.body.appendChild(dialogMask);
+	dialogMask.setAttribute("style", "position: absolute; background-color: rgba(0, 0, 0, 0.2); top: 0px; left: 0px; width: 100vw; height: 100vh; z-index: 2000; animation: ease dialogMaskIn .25s;");
+
+	var dialog = document.createElement('div');
+	dialogMask.appendChild(dialog);
+	dialog.setAttribute("style", "background-color: #f4f4f4; position: absolute; top: 50%; left: 50%; width: 270px; max-width: 95%; height: 116px; border-radius: 8px; transform: translate(-50%,-50%); z-index: 2001; animation: ease dialogIn .25s;");
+
+	var dialogHeader = document.createElement('div');
+	dialog.appendChild(dialogHeader);
+	dialogHeader.textContent = " Confirm ";
+	dialogHeader.setAttribute("style", "user-select: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-size: 17px; font-weight: 500; padding: 16px 8px 0; text-align: center; color: #1f1f21; line-height: normal; -webkit-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;");
+
+	var dialogContent = document.createElement('div');
+	dialog.appendChild(dialogContent);
+	dialogContent.textContent = " "+ text +" "
+	dialogContent.setAttribute("style", "user-select: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; box-sizing: border-box; background-clip: padding-box; padding: 4px 12px 8px; font-size: 14px; min-height: 36px; text-align: center; color: #1f1f21; -webkit-text-size-adjust: 100%;");
+
+	var dialogButton = document.createElement('div');
+	dialog.appendChild(dialogButton);
+	dialogButton.innerHTML = '<button> Cancel </button><button> OK </button>';
+	dialogButton.setAttribute("style", "line-height: normal; white-space: nowrap; display: flex; flex-wrap: wrap; width: 100%; -webkit-text-size-adjust: 100%;");
+	dialogButton.childNodes[0].setAttribute("style", "position: relative; -webkit-box-flex: 1; flex: 1; display: block; width: 100%; box-sizing: border-box; background: transparent; -webkit-font-smoothing: antialiased; user-select: none; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; letter-spacing: 0; vertical-align: middle; border: none; border-top: 1px solid #ddd; font-size: 16px; padding: 0 8px; margin: 0; background-color: transparent; text-align: center; height: 44px; line-height: 44px; outline: none; color: #0076ff; -webkit-text-size-adjust: 100%; border-bottom-left-radius: 8px;");
+	dialogButton.childNodes[1].setAttribute("style", "position: relative; -webkit-box-flex: 1; flex: 1; display: block; width: 100%; box-sizing: border-box; background: transparent; -webkit-font-smoothing: antialiased; user-select: none; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; letter-spacing: 0; vertical-align: middle; border: none; border-top: 1px solid #ddd; border-left: 1px solid #ddd; font-size: 16px; padding: 0 8px; margin: 0; background-color: transparent; text-align: center; height: 44px; line-height: 44px; outline: none; color: #0076ff; -webkit-text-size-adjust: 100%; border-bottom-right-radius: 8px;");
+
+	dialogButton.childNodes[0].addEventListener("touchstart", () => {
+		dialogButton.childNodes[0].style.backgroundColor = "#e8e8e8";
+	});
+	dialogButton.childNodes[0].addEventListener("touchend", () => {
+		dialogButton.childNodes[0].style.backgroundColor = "#f4f4f4";
+		dialogMask.style.animation = "ease dialogMaskOut .25s";
+		dialog.style.animation = "ease dialogOut .25s";
+		document.body.setAttribute("confirmed", "false");
+		setTimeout(() => {
+			dialogMask.remove();
+		}, 235);
+	});
+
+	dialogButton.childNodes[1].addEventListener("touchstart", () => {
+		dialogButton.childNodes[1].style.backgroundColor = "#e8e8e8";
+	});
+	dialogButton.childNodes[1].addEventListener("touchend", () => {
+		dialogButton.childNodes[1].style.backgroundColor = "#f4f4f4";
+		dialogMask.style.animation = "ease dialogMaskOut .25s";
+		dialog.style.animation = "ease dialogOut .25s";
+		document.body.setAttribute("confirmed", "true");
+		setTimeout(() => {
+			dialogMask.remove();
+		}, 235);
+	});
+
+	dialogButton.childNodes[0].addEventListener("mousedown", () => {
+		dialogButton.childNodes[0].style.backgroundColor = "#e8e8e8";
+	});
+	dialogButton.childNodes[0].addEventListener("mouseup", () => {
+		dialogButton.childNodes[0].style.backgroundColor = "#f4f4f4";
+		dialogMask.style.animation = "ease dialogMaskOut .25s";
+		dialog.style.animation = "ease dialogOut .25s";
+		document.body.setAttribute("confirmed", "false");
+		setTimeout(() => {
+			dialogMask.remove();
+		}, 235);
+	});
+
+	dialogButton.childNodes[1].addEventListener("mouseup", () => {
+		dialogButton.childNodes[1].style.backgroundColor = "#e8e8e8";
+	});
+	dialogButton.childNodes[1].addEventListener("mousedown", () => {
+		dialogButton.childNodes[1].style.backgroundColor = "#f4f4f4";
+		dialogMask.style.animation = "ease dialogMaskOut .25s";
+		dialog.style.animation = "ease dialogOut .25s";
+		document.body.setAttribute("confirmed", "true");
+		setTimeout(() => {
+			dialogMask.remove();
+		}, 235);
+	});
+}
+
+function prompt(text) {
+	// Usage: prompt("What's your name?")
+	var dialogMask = document.createElement('div');
+	document.body.appendChild(dialogMask);
+	dialogMask.setAttribute("style", "position: absolute; background-color: rgba(0, 0, 0, 0.2); top: 0px; left: 0px; width: 100vw; height: 100vh; z-index: 2000; animation: ease dialogMaskIn .25s;");
+
+	var dialog = document.createElement('div');
+	dialogMask.appendChild(dialog);
+	dialog.setAttribute("style", "background-color: #f4f4f4; position: absolute; top: 50%; left: 50%; width: 270px; max-width: 95%; height: 149px; border-radius: 8px; transform: translate(-50%,-50%); z-index: 2001; animation: ease dialogIn .25s;");
+
+	var dialogHeader = document.createElement('div');
+	dialog.appendChild(dialogHeader);
+	dialogHeader.textContent = " Alert ";
+	dialogHeader.setAttribute("style", "user-select: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-size: 17px; font-weight: 500; padding: 16px 8px 0; text-align: center; color: #1f1f21; line-height: normal; -webkit-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;");
+
+	var dialogContent = document.createElement('div');
+	dialog.appendChild(dialogContent);
+	dialogContent.textContent = " "+ text +" "
+	dialogContent.setAttribute("style", "user-select: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; box-sizing: border-box; background-clip: padding-box; padding: 4px 12px 8px; font-size: 14px; min-height: 36px; text-align: center; color: #1f1f21; -webkit-text-size-adjust: 100%;");
+
+	var dialogInput = document.createElement('input');
+	dialogContent.appendChild(dialogInput);
+	dialogInput.setAttribute("style", "width: 100%; margin-top: 10px; background: transparent; vertical-align: top; outline: none; line-height: 1; -webkit-font-smoothing: antialiased; letter-spacing: 0; box-shadow: none; color: #1f1f21; padding: 0; margin: 0; font-size: 16px; height: 31px; font-weight: 400; box-sizing: border-box; border: none; background-color: transparent; border-bottom: 1px solid #ccc; border-radius: 0; -webkit-writing-mode: horizontal-tb !important; text-rendering: auto; word-spacing: normal; text-transform: none; text-indent: 0px; text-shadow: none; display: inline-block; text-align: start; appearance: auto; -webkit-rtl-ordering: logical; margin-top: 10px;");
+
+	var dialogButton = document.createElement('div');
+	dialog.appendChild(dialogButton);
+	dialogButton.innerHTML = '<button> OK </button>';
+	dialogButton.setAttribute("style", "line-height: normal; white-space: nowrap; display: flex; flex-wrap: wrap; width: 100%; -webkit-text-size-adjust: 100%;");
+	dialogButton.childNodes[0].setAttribute("style", "position: relative; -webkit-box-flex: 1; flex: 1; display: block; width: 100%; box-sizing: border-box; background: transparent; -webkit-font-smoothing: antialiased; user-select: none; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; letter-spacing: 0; vertical-align: middle; border: none; border-top: 1px solid #ddd; font-size: 16px; padding: 0 8px; margin: 0; background-color: transparent; text-align: center; height: 44px; line-height: 44px; outline: none; color: #0076ff; -webkit-text-size-adjust: 100%; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;");
+	dialogButton.childNodes[0].addEventListener("touchstart", () => {
+		dialogButton.childNodes[0].style.backgroundColor = "#e8e8e8";
+	});
+	dialogButton.childNodes[0].addEventListener("mousedown", () => {
+		dialogButton.childNodes[0].style.backgroundColor = "#e8e8e8";
+	});
+	dialogInput.addEventListener("keydown", function(e) {
+		if (event.keyCode === 13) {
+			document.body.setAttribute("promptValue", dialogInput.value);
+			dialogButton.childNodes[0].style.backgroundColor = "#f4f4f4";
+			dialogMask.style.animation = "ease dialogMaskOut .25s";
+			dialog.style.animation = "ease dialogOut .25s";
+			setTimeout(() => {
+				dialogMask.remove();
+			}, 235);
+		}
+	});
+	dialogButton.childNodes[0].addEventListener("mouseup", () => {
+		document.body.setAttribute("promptValue", dialogInput.value);
+		dialogButton.childNodes[0].style.backgroundColor = "#f4f4f4";
+		dialogMask.style.animation = "ease dialogMaskOut .25s";
+		dialog.style.animation = "ease dialogOut .25s";
+		setTimeout(() => {
+			dialogMask.remove();
+		}, 235);
+	});
+dialogButton.childNodes[0].addEventListener("touchend", () => {
+		document.body.setAttribute("promptValue", dialogInput.value);
+		dialogButton.childNodes[0].style.backgroundColor = "#f4f4f4";
+		dialogMask.style.animation = "ease dialogMaskOut .25s";
+		dialog.style.animation = "ease dialogOut .25s";
+		setTimeout(() => {
+			dialogMask.remove();
+		}, 235);
+	});
+}
+
+function toast(text, actionText) {
+	// Usage: toast('Hi there!', 'Dissmiss')
+	var toast = document.createElement('div');
+	document.body.appendChild(toast);
+	document.body.style.overflow = "hidden";
+	toast.innerHTML = "<div>"+text+"</div> <button>"+actionText+"</button>";
+	toast.setAttribute("style", "display: none; z-index: 10000; position: absolute; z-index: 2; left: 8px; right: 8px; bottom: 0; margin: 8px 0; border-radius: 8px; background-color: rgba(0, 0, 0, .8); display: flex; min-height: 48px; line-height: 1.5; box-sizing: border-box; padding: 16px; -webkit-font-smoothing: antialiased; font-weight: 400; font-size: 14px; color: #fff; animation: ease toastIn .5s;");
+	toast.childNodes[0].setAttribute("style", "-webkit-box-flex: 1; flex-grow: 1; text-align: left; margin: 0 16px 0 0; white-space: normal");
+	toast.childNodes[2].setAttribute("style", "font-size: 14px; color: #fff; -webkit-box-flex: 0; flex-grow: 0; appearance: none; border: none; background-color: transparent; cursor: default; text-transform: uppercase; touch-action: manipulation;");
+
+	toast.childNodes[2].addEventListener("touchstart", () => {
+		toast.childNodes[2].style.color = "#81818a";
+	});
+
+	toast.childNodes[2].addEventListener("touchend", () => {
+		toast.style.animation = "ease toastOut .5s";
+		setTimeout(() => {
+			document.body.style.overflow = "";
+			toast.remove();
+		}, 480);
+	});
+
+	setTimeout(() => {
+		toast.style.animation = "ease toastOut .5s";
+		setTimeout(() => {
+			document.body.style.overflow = "";
+			toast.remove();
+		}, 480);
+	}, 2000);
+}
+
+function toast2(text, actionText) {
+	// Usage: toast2('Hi there!', 'Dissmiss')
+	var toast = document.createElement('div');
+	document.body.appendChild(toast);
+	document.body.style.overflow = "hidden";
+	toast.innerHTML = "<div>"+text+"</div> <button>"+actionText+"</button>";
+	toast.setAttribute("style", "display: none; z-index: 10000; position: absolute; z-index: 2; left: 8px; right: 8px; top: 0; margin: 8px 0; border-radius: 8px; background-color: rgba(0, 0, 0, .8); display: flex; min-height: 48px; line-height: 1.5; box-sizing: border-box; padding: 16px; -webkit-font-smoothing: antialiased; font-weight: 400; font-size: 14px; color: #fff; animation: ease toastIn .5s;");
+	toast.childNodes[0].setAttribute("style", "-webkit-box-flex: 1; flex-grow: 1; text-align: left; margin: 0 16px 0 0; white-space: normal");
+	toast.childNodes[2].setAttribute("style", "font-size: 14px; color: #fff; -webkit-box-flex: 0; flex-grow: 0; appearance: none; border: none; background-color: transparent; cursor: default; text-transform: uppercase; touch-action: manipulation;");
+
+	toast.childNodes[2].addEventListener("touchstart", () => {
+		toast.childNodes[2].style.color = "#81818a";
+	});
+
+	toast.childNodes[2].addEventListener("touchend", () => {
+		toast.style.animation = "ease toastOut .5s";
+		setTimeout(() => {
+			document.body.style.overflow = "";
+			toast.remove();
+		}, 480);
+	});
+
+	toast.childNodes[2].addEventListener("mousedown", () => {
+		toast.childNodes[2].style.color = "#81818a";
+	});
+
+	toast.childNodes[2].addEventListener("mouseup", () => {
+		toast.style.animation = "ease toastOut .5s";
+		setTimeout(() => {
+			document.body.style.overflow = "";
+			toast.remove();
+		}, 480);
+	});
+}
+
+function actionSheet(sheet) {
+	// Usage: actionSheet([{text:'This', destructive:false}, {text:'Is', destructive:true}, {text:'Absolutely', destructive:false}, {text:'Epic', destructive:true}])
+	var actionSheetMask = document.createElement('div');
+	document.body.appendChild(actionSheetMask);
+	actionSheetMask.setAttribute("style", "position: absolute; background-color: rgba(0, 0, 0, 0.1); top: 0px; left: 0px; right: 0; bottom: 0; z-index: 2000; animation: ease dialogMaskIn .2s;");
+
+	document.body.style.overflow = "hidden";
+
+	var actionSheet = document.createElement('div');
+	actionSheetMask.appendChild(actionSheet);
+	actionSheet.setAttribute("style", "-webkit-font-smoothing: antialiased; font-weight: 400; cursor: default; position: absolute; left: 10px; right: 10px; bottom: 10px; animation: ease sheetUp 0.2s;");
+
+	for (var i = 0; i < sheet.length; i++) {
+		var action = document.createElement('div');
+		actionSheet.appendChild(action);
+		action.textContent = sheet[i].text;
+		action.setAttribute("style", "box-sizing: border-box; height: 56px; font-size: 20px; text-align: center; color: #0076ff; background-color: hsla(0, 0%, 100%, .9); border-radius: 0; line-height: 56px; border: none; appearance: none; display: block; width: 100%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; background-size: 100% 1px; background-repeat: no-repeat; background-position: bottom; background-image: linear-gradient(0deg, rgba(0,0,0,.1), rgba(0,0,0,.1) 100%);");
+		if (i === 0) {
+			action.style.borderTopLeftRadius = "12px";
+			action.style.borderTopRightRadius = "12px";
+		}
+		if (i === sheet.length - 1) {
+			action.style.borderBottomLeftRadius = "12px";
+			action.style.borderBottomRightRadius = "12px";
+		}
+		if (sheet[i].destructive === true) {
+			action.style.color = "#fe3824";
+		}
+
+		action.addEventListener("touchstart", function(e) {
+			e.target.style.backgroundColor = "#e9e9e9";
+		});
+
+		action.addEventListener("touchend", function(e){
+			e.target.style.backgroundColor = "hsla(0, 0%, 100%, .9)";
+			document.body.setAttribute("sheetValue", event.target.textContent);
+			actionSheetMask.style.animation = "linear dialogMaskOut 0.2s";
+			actionSheet.style.animation = "linear sheetDown 0.2s";
+			setTimeout(() => {
+				actionSheetMask.remove();
+			}, 180);
+		});
+
+		action.addEventListener("mousedown", function(e) {
+			e.target.style.backgroundColor = "#e9e9e9";
+		});
+
+		action.addEventListener("mouseup", function(e){
+			e.target.style.backgroundColor = "hsla(0, 0%, 100%, .9)";
+			document.body.setAttribute("sheetValue", event.target.textContent);
+			actionSheetMask.style.animation = "linear dialogMaskOut 0.2s";
+			actionSheet.style.animation = "linear sheetDown 0.2s";
+			setTimeout(() => {
+				actionSheetMask.remove();
+			}, 180);
+		});
+	}
+
+	var cancel = document.createElement('div');
+	actionSheet.appendChild(cancel);
+	cancel.textContent = " Cancel ";
+	cancel.setAttribute("style", "box-sizing: border-box; height: 56px; font-size: 20px; text-align: center; color: #0076ff; background-color: hsla(0, 0%, 100%, .9); border-radius: 12px; line-height: 56px; border: none; appearance: none; display: block; width: 100%; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; background-size: 100% 1px; background-repeat: no-repeat; background-position: bottom; background-image: linear-gradient(0deg, rgba(0,0,0,.1), rgba(0,0,0,.1) 100%); margin: 8px 0 0; background-color: #fff; background-image: none; font-weight: 600;");
+
+	cancel.addEventListener("touchstart", () => {
+		cancel.style.backgroundColor = "#e9e9e9";
+	});
+
+	cancel.addEventListener("touchend", () => {
+		cancel.style.backgroundColor = "#fff";
+		actionSheetMask.style.animation = "linear dialogMaskOut 0.2s";
+		actionSheet.style.animation = "linear sheetDown 0.2s";
+		setTimeout(() => {
+			actionSheetMask.remove();
+		}, 180);
+	});
+
+	cancel.addEventListener("mousedown", () => {
+		cancel.style.backgroundColor = "#e9e9e9";
+	});
+
+	cancel.addEventListener("mouseup", () => {
+		cancel.style.backgroundColor = "#fff";
+		actionSheetMask.style.animation = "linear dialogMaskOut 0.2s";
+		actionSheet.style.animation = "linear sheetDown 0.2s";
+		setTimeout(() => {
+			actionSheetMask.remove();
+		}, 180);
+	});
+}
+
+function alertDialog(data) {
+	// Usage: alertDialog({header:'Hey!!', text:'Lorem ipsum', options:['Wat', 'Hmm', 'Sure']})
+	var dialogMask = document.createElement('div');
+	document.body.appendChild(dialogMask);
+	dialogMask.setAttribute("style", "position: absolute; background-color: rgba(0, 0, 0, 0.2); top: 0px; left: 0px; width: 100vw; height: 100vh; z-index: 2000; animation: ease dialogMaskIn .25s;");
+
+	var dialog = document.createElement('div');
+	dialogMask.appendChild(dialog);
+	dialog.setAttribute("style", "background-color: #f4f4f4; position: absolute; top: 50%; left: 50%; width: 270px; max-width: 95%; height: 116px; border-radius: 8px; transform: translate(-50%,-50%); z-index: 20001; animation: ease dialogIn .25s;");
+
+	var dialogHeader = document.createElement('div');
+	dialog.appendChild(dialogHeader);
+	dialogHeader.textContent = " "+ data.header +" ";
+	dialogHeader.setAttribute("style", "user-select: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-size: 17px; font-weight: 500; padding: 16px 8px 0; text-align: center; color: #1f1f21; line-height: normal; -webkit-text-size-adjust: 100%; -webkit-text-size-adjust: 100%;");
+
+	var dialogContent = document.createElement('div');
+	dialog.appendChild(dialogContent);
+	dialogContent.textContent = " "+ data.text +" "
+	dialogContent.setAttribute("style", "user-select: none; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; box-sizing: border-box; background-clip: padding-box; padding: 4px 12px 8px; font-size: 14px; min-height: 36px; text-align: center; color: #1f1f21; -webkit-text-size-adjust: 100%;");
+
+	var dialogButton = document.createElement('div');
+	dialog.appendChild(dialogButton);
+	for (var i = 0; i < data.options.length; i++) {
+		dialogButton.appendChild(document.createElement('button')).textContent = data.options[i];
+	}
+	dialogButton.setAttribute("style", "line-height: normal; white-space: nowrap; display: flex; flex-wrap: wrap; width: 100%; -webkit-text-size-adjust: 100%;");
+	for (var i = 0; i < dialogButton.childNodes.length; i++) {
+		if (i === 0) {
+			dialogButton.childNodes[i].setAttribute("style", "position: relative; -webkit-box-flex: 1; flex: 1; display: block; width: 100%; box-sizing: border-box; background: transparent; -webkit-font-smoothing: antialiased; user-select: none; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; letter-spacing: 0; vertical-align: middle; border: none; border-top: 1px solid #ddd; font-size: 16px; padding: 0 8px; margin: 0; background-color: transparent; text-align: center; height: 44px; line-height: 44px; outline: none; color: #0076ff; -webkit-text-size-adjust: 100%; border-bottom-left-radius: 8px;");
+		} else {
+			dialogButton.childNodes[i].setAttribute("style", "position: relative; -webkit-box-flex: 1; flex: 1; display: block; width: 100%; box-sizing: border-box; background: transparent; -webkit-font-smoothing: antialiased; user-select: none; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; letter-spacing: 0; vertical-align: middle; border: none; border-top: 1px solid #ddd; border-left: 1px solid #ddd; font-size: 16px; padding: 0 8px; margin: 0; background-color: transparent; text-align: center; height: 44px; line-height: 44px; outline: none; color: #0076ff; -webkit-text-size-adjust: 100%;");
+		}
+
+		if (i === dialogButton.childNodes.length - 1) {
+			dialogButton.childNodes[i].setAttribute("style", "position: relative; -webkit-box-flex: 1; flex: 1; display: block; width: 100%; box-sizing: border-box; background: transparent; -webkit-font-smoothing: antialiased; user-select: none; text-overflow: ellipsis; white-space: nowrap; text-decoration: none; letter-spacing: 0; vertical-align: middle; border: none; border-top: 1px solid #ddd; border-left: 1px solid #ddd; font-size: 16px; padding: 0 8px; margin: 0; background-color: transparent; text-align: center; height: 44px; line-height: 44px; outline: none; color: #0076ff; -webkit-text-size-adjust: 100%; border-bottom-right-radius: 8px;");
+		}
+
+		dialogButton.childNodes[i].addEventListener("touchstart", function(e){
+			e.target.style.backgroundColor = "#e8e8e8";
+		});
+		dialogButton.childNodes[i].addEventListener("touchend", function(e){
+			e.target.style.backgroundColor = "#f4f4f4";
+			dialogMask.style.animation = "ease dialogMaskOut .25s";
+			dialog.style.animation = "ease dialogOut .25s";
+			document.body.setAttribute("alertDialogValue", e.target.textContent);
+			setTimeout(() => {
+				dialogMask.remove();
+			}, 235);
+		});
+
+		dialogButton.childNodes[i].addEventListener("mousedown", function(e){
+			e.target.style.backgroundColor = "#e8e8e8";
+		});
+		dialogButton.childNodes[i].addEventListener("mouseup", function(e){
+			e.target.style.backgroundColor = "#f4f4f4";
+			dialogMask.style.animation = "ease dialogMaskOut .25s";
+			dialog.style.animation = "ease dialogOut .25s";
+			document.body.setAttribute("alertDialogValue", e.target.textContent);
+			setTimeout(() => {
+				dialogMask.remove();
+			}, 235);
+		});
+	}
+}
+
+function modal(message, length) {
+	// Usage: modal('Click or wait', 2000)
+	var modal = document.createElement('div');
+	document.body.appendChild(modal);
+	modal.setAttribute('style', 'display: table; z-index: 2147483647; white-space: nowrap; word-spacing: 0; padding: 0; margin: 0; font: inherit; border: 0; line-height: normal; box-sizing: border-box; -webkit-font-smoothing: antialiased; font-weight: 400; overflow: hidden; color: inherit; background: transparent; background-clip: padding-box; background-color: rgba(0, 0, 0, .7); position: absolute; left: 0; right: 0; top: 0; bottom: 0; width: 100%; height: 100%;');
+
+	var modalContent = document.createElement('div');
+	modal.appendChild(modalContent);
+	modalContent.setAttribute('style', 'background: transparent; background-clip: padding-box; display: table-cell; vertical-align: middle; text-align: center; color: #fff; white-space: normal; word-spacing: 0; padding: 0; margin: 0; font: inherit; border: 0; line-height: normal; box-sizing: border-box; -webkit-font-smoothing: antialiased; font-weight: 400; overflow: hidden;');
+
+	var modalText = document.createElement('p');
+	modalContent.appendChild(modalText);
+	modalText.style.textAlign = "center";
+	modalText.innerHTML = ' Loading...<br><br> '+message+' ';
+
+	modal.addEventListener('touchend', () => {
+		modal.remove();
+	});
+
+	modal.addEventListener('mouseup', () => {
+		modal.remove();
+	});
+
+	setTimeout(() => {
+		modal.remove();
+	}, length);
+}
+
+</script>
