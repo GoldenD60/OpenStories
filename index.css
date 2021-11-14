@@ -46,3 +46,20 @@
 	text-align: center;
 	margin: 25vh 0;
 }
+
+#pages--list {
+	max-width: 85vw;
+	max-height: 85vh;
+}
+
+#page-editor--caption {
+	text-align: center;
+	user-select: none;
+	width: 40vh !important;
+	height: 40vw !important;
+	resize: none;
+	border: 1px solid #888;
+	border-radius: 5px;
+	font: inherit;
+	font-size: 20pt;
+}

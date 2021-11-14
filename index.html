@@ -69,5 +69,55 @@
 				</p>
 			</ons-page>
 		</template>
+
+		<template id="edit.html">
+			<ons-dialog id="edit">
+				<ons-toolbar>
+					<div class="left">
+						<ons-toolbar-button onclick="hideEditor()" tappable>
+							Close
+						</ons-toolbar-button>
+					</div>
+					<div class="center">
+						<ons-toolbar-button>
+							<ons-icon icon="ion-ios-add"></ons-icon>
+						</ons-toolbar-button>
+					</div>
+					<div class="right">
+						<ons-toolbar-button>
+							Edit
+						</ons-toolbar-button>
+					</div>
+				</ons-toolbar>
+				<br><br>
+				<ons-list id="pages--list"></ons-list>
+			</ons-dialog>
+		</template>
+
+		<template id="editPage.html">
+			<ons-dialog id="editPage">
+				<ons-toolbar>
+					<div class="left">
+						<ons-toolbar-button tappable>
+							Save
+						</ons-toolbar-button>
+					</div>
+					<div class="center">
+						<ons-toolbar-button tappable>
+							Copy
+						</ons-toolbar-button>
+					</div>
+					<div class="right">
+						<ons-toolbar-button onclick="hidePagesEditor()" tappable>
+							Cancel
+						</ons-toolbar-button>
+					</div>
+				</ons-toolbar>
+				<br>
+				<br>
+				<br>
+				<textarea id="page-editor--caption"></textarea>
+			</ons-dialog>
+		</template>
 	</body>
 </html>
