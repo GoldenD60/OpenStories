@@ -52,11 +52,11 @@
 	max-height: 85vh;
 }
 
-#page-editor--caption {
+#page-editor__caption {
 	text-align: center;
 	user-select: none;
 	width: 40vh !important;
-	height: 40vw !important;
+	height: 10vw !important;
 	resize: none;
 	border: 1px solid #888;
 	border-radius: 5px;

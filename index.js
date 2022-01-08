@@ -159,8 +159,9 @@ function edit(index) {
 	}
 }
 
-function editPage(index, page) {
-	var page = stories[index]["pages"][page];
+function editPage(index, currentPage) {
+	var page = stories[index]["pages"][currentPage];
+	var story = stories[index];
 	var dialog = document.getElementById('editPage');
 
 	if (dialog) {
@@ -169,6 +170,11 @@ function editPage(index, page) {
 		ons.createElement('editPage.html', { append: true })
 		.then(function(dialog) {
 			dialog.show();
+			var captions = document.getElementsByClassName("page-editor--caption");
+			for (var i = 0; i < captions.length; i++) {
+				var caption = captions[i];
+				caption.textContent = page["caption"];
+			}
 		});
 	}
 }
